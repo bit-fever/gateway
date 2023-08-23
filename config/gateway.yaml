@@ -1,0 +1,10 @@
+general:
+  logFile: log/gateway.log
+  bindAddress: :8443
+routes:
+  portfolio-trader:
+    prefix: /api/portfolio
+    url: https://bitfever-server:8445/api/portfolio
+  frontend:
+    prefix: /
+    url: http://localhost:4200
