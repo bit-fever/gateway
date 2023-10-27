@@ -49,10 +49,6 @@ func Init(cfg *config.Config, router *gin.Engine) {
 	gatewayCfg   = cfg
 	transportCfg = createHttpTransport()
 	router.Use(handleUrl)
-
-	//	router.POST("/login", login)
-	//	router.POST("/logout", logout)
-
 }
 
 //=============================================================================
@@ -83,11 +79,6 @@ func createHttpTransport() *http.Transport {
 func handleUrl(c *gin.Context) {
 	start := time.Now()
 	log.Printf("New request from %s : %s", c.ClientIP(), c.Request.URL.String())
-	//if !myAuth.authenticate(req.Header.Get("Authorization")) {
-	//	res.WriteHeader(http.StatusUnauthorized)
-	//	return
-	//}
-
 	path := c.Request.URL.Path
 
 	targetURL := lookupTargetURL(path)
@@ -95,15 +86,10 @@ func handleUrl(c *gin.Context) {
 		c.String(404, "Not Found")
 		return
 	}
-	//if !isPublic {
-	//	if !myAuth.authenticate(req.Header.Get("Authorization")) {
-	//		http.Error(res, "Unauthorized", 401)
-	//		return
-	//	}
-	//}
+
 	proxy(targetURL, c)
 	duration := time.Since(start)
-	log.Printf("Request served in %v seconds", duration)
+	log.Printf("Request served in %v", duration)
 }
 
 //=============================================================================
@@ -146,36 +132,5 @@ func proxy(targetURL string, c *gin.Context) {
 	log.Printf("Forwarding request to %v", target)
 	proxy.ServeHTTP(c.Writer, c.Request)
 }
-
-//=============================================================================
-
-//func login(c *gin.Context) {
-//	params := req.URL.Query()
-//	body, err := ioutil.ReadAll(req.Body)
-//	if err != nil {
-//		http.Error(res, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
-//		return
-//	}
-//	// your actual login logic follows here using the data in "body" and "params"
-//	token, err := myAuth.DoLogin(body, params)
-//	if err == nil {
-//		res.WriteHeader(http.StatusOK)
-//		//...
-//	} else {
-//		res.WriteHeader(http.StatusUnauthorized)
-//		///...
-//	}
-//}
-
-//=============================================================================
-
-//func logout(c *gin.Context) {
-//	if !myAuth.authenticate(req.Header.Get("Authorization")) {
-//		res.WriteHeader(http.StatusUnauthorized)
-//		///...
-//		return
-//	}
-//	// end session and remove any state related to user login account
-//}
 
 //=============================================================================

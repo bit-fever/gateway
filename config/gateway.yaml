@@ -4,10 +4,13 @@ general:
 routes:
 #  keycloak-admin:
 #    prefix: /auth/admin
-#    url: http://bitfever-server:4200
+#    url: http://bitfever-server:8444
   keycloak:
     prefix: /auth
     url: https://bitfever-server:8448
+  inventory-server:
+    prefix: /api/inventory
+    url: https://bitfever-server:8447/api/inventory
   portfolio-trader:
     prefix: /api/portfolio
     url: https://bitfever-server:8445/api/portfolio
