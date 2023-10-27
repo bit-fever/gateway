@@ -2,9 +2,15 @@ general:
   logFile: log/gateway.log
   bindAddress: :8443
 routes:
+#  keycloak-admin:
+#    prefix: /auth/admin
+#    url: http://bitfever-server:4200
+  keycloak:
+    prefix: /auth
+    url: https://bitfever-server:8448
   portfolio-trader:
     prefix: /api/portfolio
     url: https://bitfever-server:8445/api/portfolio
   frontend:
     prefix: /
-    url: http://localhost:4200
+    url: http://bitfever-server:8444
