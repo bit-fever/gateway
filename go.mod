@@ -1,6 +1,6 @@
 module github.com/bit-fever/gateway
 
-go 1.20
+go 1.21
 
 require (
 	github.com/bit-fever/core v1.0.0
