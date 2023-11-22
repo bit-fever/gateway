@@ -27,6 +27,7 @@ package service
 import (
 	"crypto/tls"
 	"crypto/x509"
+	"github.com/bit-fever/core"
 	"github.com/bit-fever/gateway/pkg/app"
 	"github.com/gin-gonic/gin"
 	"log/slog"
@@ -56,16 +57,14 @@ func Init(cfg *app.Config, router *gin.Engine, logger *slog.Logger) {
 func createHttpTransport(logger *slog.Logger) *http.Transport {
 	cert, err := os.ReadFile("config/ca.crt")
 	if err != nil {
-		logger.Error("Could not open certificate file: %v", err)
-		os.Exit(1)
+		core.ExitWithMessage("Could not open certificate file: "+ err.Error())
 	}
 	caCertPool := x509.NewCertPool()
 	caCertPool.AppendCertsFromPEM(cert)
 
 	certificate, err := tls.LoadX509KeyPair("config/client.crt", "config/client.key")
 	if err != nil {
-		logger.Error("Could not load certificate: %v", err)
-		os.Exit(1)
+		core.ExitWithMessage("Could not load certificate: "+ err.Error())
 	}
 
 	return &http.Transport{
