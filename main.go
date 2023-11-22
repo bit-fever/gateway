@@ -26,33 +26,24 @@ package main
 
 import (
 	"github.com/bit-fever/core/boot"
-	"github.com/bit-fever/gateway/pkg/model/config"
+	"github.com/bit-fever/gateway/pkg/app"
 	"github.com/bit-fever/gateway/pkg/service"
-	"github.com/gin-gonic/gin"
-	"log"
 )
 
 //=============================================================================
 
-func main() {
-	cfg := &config.Config{}
-	boot.ReadConfig("gateway", cfg)
-	file := boot.InitLogs(cfg.General.LogFile)
-	defer file.Close()
-
-	router := registerServices(cfg)
-	boot.RunHttpServer(router, cfg.General.BindAddress)
-}
+const component = "gateway"
 
 //=============================================================================
 
-func registerServices(cfg *config.Config) *gin.Engine {
+func main() {
+	cfg := &app.Config{}
+	boot.ReadConfig(component, cfg)
+	logger := boot.InitLogger(component, &cfg.Application)
+	engine := boot.InitEngine(logger,    &cfg.Application)
+	service.Init(cfg, engine, logger)
+	boot.RunHttpServer(engine, &cfg.Application)
 
-	log.Println("Registering services...")
-	router := gin.Default()
-	service.Init(cfg, router)
-
-	return router
 }
 
 //=============================================================================

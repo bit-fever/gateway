@@ -1,6 +1,7 @@
-general:
-  logFile: log/gateway.log
+application:
   bindAddress: :8443
+  production: false
+  debug: false
 routes:
 #  keycloak-admin:
 #    prefix: /auth/admin
@@ -14,6 +15,9 @@ routes:
   portfolio-trader:
     prefix: /api/portfolio
     url: https://bitfever-server:8445/api/portfolio
+  system-adapter:
+    prefix: /api/system
+    url: https://bitfever-server:8449/api/system
   frontend:
     prefix: /
     url: http://bitfever-server:8444

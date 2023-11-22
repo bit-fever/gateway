@@ -22,15 +22,14 @@ THE SOFTWARE.
 */
 //=============================================================================
 
-package config
+package app
+
+import "github.com/bit-fever/core"
 
 //=============================================================================
 
 type Config struct {
-	General struct {
-		LogFile     string
-		BindAddress string
-	}
+	core.Application
 	Routes map[string]struct {
 		Prefix string
 		Url    string

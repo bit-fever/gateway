@@ -27,9 +27,9 @@ package service
 import (
 	"crypto/tls"
 	"crypto/x509"
-	"github.com/bit-fever/gateway/pkg/model/config"
+	"github.com/bit-fever/gateway/pkg/app"
 	"github.com/gin-gonic/gin"
-	"log"
+	"log/slog"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
@@ -40,30 +40,32 @@ import (
 
 //=============================================================================
 
-var gatewayCfg *config.Config
+var gatewayCfg *app.Config
 var transportCfg *http.Transport
 
 //=============================================================================
 
-func Init(cfg *config.Config, router *gin.Engine) {
+func Init(cfg *app.Config, router *gin.Engine, logger *slog.Logger) {
 	gatewayCfg   = cfg
-	transportCfg = createHttpTransport()
+	transportCfg = createHttpTransport(logger)
 	router.Use(handleUrl)
 }
 
 //=============================================================================
 
-func createHttpTransport() *http.Transport {
+func createHttpTransport(logger *slog.Logger) *http.Transport {
 	cert, err := os.ReadFile("config/ca.crt")
 	if err != nil {
-		log.Fatalf("Could not open certificate file: %v", err)
+		logger.Error("Could not open certificate file: %v", err)
+		os.Exit(1)
 	}
 	caCertPool := x509.NewCertPool()
 	caCertPool.AppendCertsFromPEM(cert)
 
 	certificate, err := tls.LoadX509KeyPair("config/client.crt", "config/client.key")
 	if err != nil {
-		log.Fatalf("Could not load certificate: %v", err)
+		logger.Error("Could not load certificate: %v", err)
+		os.Exit(1)
 	}
 
 	return &http.Transport{
@@ -78,7 +80,7 @@ func createHttpTransport() *http.Transport {
 
 func handleUrl(c *gin.Context) {
 	start := time.Now()
-	log.Printf("New request from %s : %s", c.ClientIP(), c.Request.URL.String())
+	slog.Info("New request from %s : %s", c.ClientIP(), c.Request.URL.String())
 	path := c.Request.URL.Path
 
 	targetURL := lookupTargetURL(path)
@@ -89,7 +91,7 @@ func handleUrl(c *gin.Context) {
 
 	proxy(targetURL, c)
 	duration := time.Since(start)
-	log.Printf("Request served in %v", duration)
+	slog.Info("Request served in %v", duration)
 }
 
 //=============================================================================
@@ -129,7 +131,7 @@ func proxy(targetURL string, c *gin.Context) {
 		request.URL.Path = target.Path
 	}
 
-	log.Printf("Forwarding request to %v", target)
+	slog.Info("Forwarding request to %v", target)
 	proxy.ServeHTTP(c.Writer, c.Request)
 }
 
