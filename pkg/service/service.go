@@ -79,7 +79,7 @@ func createHttpTransport(logger *slog.Logger) *http.Transport {
 
 func handleUrl(c *gin.Context) {
 	start := time.Now()
-	slog.Info("New request from %s : %s", c.ClientIP(), c.Request.URL.String())
+	slog.Info("New request", "client", c.ClientIP(), "context", c.Request.URL.String())
 	path := c.Request.URL.Path
 
 	targetURL := lookupTargetURL(path)
@@ -90,7 +90,7 @@ func handleUrl(c *gin.Context) {
 
 	proxy(targetURL, c)
 	duration := time.Since(start)
-	slog.Info("Request served in %v", duration)
+	slog.Info("Request served", "duration", duration)
 }
 
 //=============================================================================
@@ -130,7 +130,7 @@ func proxy(targetURL string, c *gin.Context) {
 		request.URL.Path = target.Path
 	}
 
-	slog.Info("Forwarding request to %v", target)
+	slog.Info("Forwarding request", "target", target)
 	proxy.ServeHTTP(c.Writer, c.Request)
 }
 

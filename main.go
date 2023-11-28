@@ -43,7 +43,6 @@ func main() {
 	engine := boot.InitEngine(logger,    &cfg.Application)
 	service.Init(cfg, engine, logger)
 	boot.RunHttpServer(engine, &cfg.Application)
-
 }
 
 //=============================================================================

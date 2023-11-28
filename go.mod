@@ -3,7 +3,7 @@ module github.com/bit-fever/gateway
 go 1.21
 
 require (
-	github.com/bit-fever/core v1.5.2
+	github.com/bit-fever/core v1.6.1
 	github.com/gin-gonic/gin v1.9.1
 )
 
