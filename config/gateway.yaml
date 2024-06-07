@@ -18,6 +18,9 @@ routes:
   system-adapter:
     prefix: /api/system
     url: https://bitfever-server:8449/api/system
+  data-collector:
+    prefix: /api/collector
+    url: https://bitfever-server:8446/api/collector
   frontend:
     prefix: /
     url: http://bitfever-server:8444
