@@ -21,6 +21,9 @@ routes:
   data-collector:
     prefix: /api/collector
     url: https://bitfever-server:8446/api/collector
+  storage-manager:
+    prefix: /api/storage
+    url: https://bitfever-server:8452/api/storage
   frontend:
     prefix: /
     url: http://bitfever-server:8444
