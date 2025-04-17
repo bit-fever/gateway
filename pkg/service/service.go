@@ -85,12 +85,13 @@ func handleUrl(c *gin.Context) {
 	targetURL := lookupTargetURL(path)
 	if targetURL == "" {
 		c.String(404, "Not Found")
+		slog.Error("URL mapping not found", "client", c.ClientIP(), "path", path)
 		return
 	}
 
 	proxy(targetURL, c)
 	duration := time.Since(start)
-	slog.Info("Request served", "duration", duration)
+	slog.Info("Request served", "duration", duration.Seconds())
 }
 
 //=============================================================================
@@ -119,9 +120,11 @@ func lookupTargetURL(path string) string {
 func proxy(targetURL string, c *gin.Context) {
 	target, err := url.Parse(targetURL)
 	if err != nil {
-		c.String(500, "Invalid URL")
+		c.String(500, "Invalid target URL")
+		slog.Error("Invalid target URL", "client", c.ClientIP(), "url", targetURL)
 		return
 	}
+
 	proxy := httputil.NewSingleHostReverseProxy(target)
 	proxy.Transport = transportCfg
 	proxy.Director  = func(request *http.Request) {

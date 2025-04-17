@@ -24,6 +24,9 @@ routes:
   storage-manager:
     prefix: /api/storage
     url: https://bitfever-server:8452/api/storage
+  doc-editor:
+    prefix: /doc-editor
+    url: http://bitfever-server:8453/doc-editor
   frontend:
     prefix: /
     url: http://bitfever-server:8444
